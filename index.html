@@ -62,6 +62,17 @@
         light.position.set(10, 10, 10).normalize();
         scene.add(light);
 
+        // controls :
+
+        // PointerLockControls for first-person movement
+        const controls = new THREE.PointerLockControls(camera, document.body);
+        // Add click event listener to lock pointer
+        document.addEventListener('click', () => {
+            controls.lock();
+        });
+
+        // controls end
+
         // Controls
         const keys = {};
         document.addEventListener('keydown', (event) => {
