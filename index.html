@@ -11,7 +11,6 @@
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/PointerLockControls.js"></script>
     <script>
         // Create the scene
         const scene = new THREE.Scene();
@@ -63,15 +62,7 @@
         light.position.set(10, 10, 10).normalize();
         scene.add(light);
 
-        // PointerLockControls for first-person movement
-        const controls = new THREE.PointerLockControls(camera, document.body);
-
-        // Add click event listener to lock pointer
-        document.addEventListener('click', () => {
-            controls.lock();
-        });
-
-        // Controls for movement
+        // Controls
         const keys = {};
         document.addEventListener('keydown', (event) => {
             keys[event.key.toLowerCase()] = true;
@@ -83,16 +74,20 @@
         function updateCameraPosition() {
             const speed = 0.1;
             if (keys['w']) {
-                controls.moveForward(speed);
+                camera.position.z -= Math.cos(camera.rotation.y) * speed;
+                camera.position.x -= Math.sin(camera.rotation.y) * speed;
             }
             if (keys['s']) {
-                controls.moveForward(-speed);
+                camera.position.z += Math.cos(camera.rotation.y) * speed;
+                camera.position.x += Math.sin(camera.rotation.y) * speed;
             }
             if (keys['a']) {
-                controls.moveRight(-speed);
+                camera.position.x -= Math.cos(camera.rotation.y) * speed;
+                camera.position.z += Math.sin(camera.rotation.y) * speed;
             }
             if (keys['d']) {
-                controls.moveRight(speed);
+                camera.position.x += Math.cos(camera.rotation.y) * speed;
+                camera.position.z -= Math.sin(camera.rotation.y) * speed;
             }
         }
 
