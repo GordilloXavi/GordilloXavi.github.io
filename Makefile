@@ -6,13 +6,19 @@ PORT = 5173
 run:
 	npx vite
 
+build:
+	npx build
+	find . -type f ! -name 'Makefile' ! -name '.git' ! -name '.gitignore' -exec rm -f {} +
+	mv dist/* .
+
+
 # Docker clean
 docker-full-clean:
 	docker system prune -a -f
 
 # Build Docker image
-build:
-	docker build -t $(IMAGE_NAME) .
+#build:
+#	docker build -t $(IMAGE_NAME) .
 
 # Run Docker container
 up:
