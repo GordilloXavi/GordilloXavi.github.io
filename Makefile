@@ -7,8 +7,8 @@ run:
 	npx vite
 
 build:
-	npx build
-	find . -type f ! -name 'Makefile' ! -name '.git' ! -name '.gitignore' -exec rm -f {} +
+	npx vite build
+	find . -type f ! -name 'Makefile' ! -name '.git' ! -name '.gitignore' ! -name 'dist' -exec rm -rf {} +
 	mv dist/* .
 
 
