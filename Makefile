@@ -3,6 +3,9 @@ IMAGE_NAME = app_docker_image
 CONTAINER_NAME = app_container
 PORT = 5173
 
+install-deps:
+	npm install
+
 run:
 	npx vite
 
@@ -10,7 +13,7 @@ build:
 	npx vite build
 	find . -type f ! -name 'Makefile' ! -name '.git' ! -path './.git/*' ! -name '.gitignore' ! -path './dist/*' -exec rm -rf {} +
 	mv dist/* .
-	rmdir dist
+	rmdir dist app
 
 
 # Docker clean
