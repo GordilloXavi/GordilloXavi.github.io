@@ -8,8 +8,9 @@ run:
 
 build:
 	npx vite build
-	find . -type f ! -name 'Makefile' ! -name '.git' ! -name '.gitignore' ! -name 'dist' -exec rm -rf {} +
+	find . -type f ! -name 'Makefile' ! -name '.git' ! -path './.git/*' ! -name '.gitignore' ! -path './dist/*' -exec rm -rf {} +
 	mv dist/* .
+	rmdir dist
 
 
 # Docker clean
