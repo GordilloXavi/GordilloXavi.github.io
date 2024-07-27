@@ -1,3 +1,4 @@
+/*
 import * as THREE from 'three';
 import { Terrain } from './terrain';
 
@@ -8,3 +9,4 @@ export class World extends THREE.Group {
         terrain.generate();
     }
 }
+*/

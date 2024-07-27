@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Wireframe } from 'three/examples/jsm/Addons.js';
 import { color } from 'three/examples/jsm/nodes/Nodes.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { World } from './world';
+import { createNoise2D } from 'simplex-noise';
 import * as dat from 'dat.gui';
 
 // Renderer
@@ -23,18 +23,36 @@ camera.lookAt(0, 0, 0);
 // Scene
 const scene = new THREE.Scene();
 
-// World
-
-const world = new World({width: 64, height: 5});
-world.generate();
-scene.add(world);
-
 // Controls
 const controls = new OrbitControls(camera, renderer.domElement);
 
 // Add a 3D GridHelper
-const gridHelper = new THREE.GridHelper(100, 100); // Size of the grid, divisions
-scene.add(gridHelper);
+//const gridHelper = new THREE.GridHelper(100, 100); // Size of the grid, divisions
+//scene.add(gridHelper);
+
+// Terrain
+let terrain_width = 100;
+let terrain_height = 100;
+const terrain_geometry = new THREE.PlaneGeometry( terrain_width, terrain_height, terrain_width, terrain_height );
+terrain_geometry.rotateX(Math.PI / 2)
+const terrain_material = new THREE.MeshBasicMaterial( {color: 0xaaffbb, side: THREE.DoubleSide, wireframe: true} );
+const terrain_mesh = new THREE.Mesh( terrain_geometry, terrain_material );
+scene.add( terrain_mesh );
+
+const noise2D = createNoise2D();
+const terrain_vertices = terrain_geometry.attributes.position.array
+
+/*
+for (let i = 0; i < terrain_height; i++) {
+    for (let j = 0; i < terrain_width; j++) {
+        //console.log();
+        //noise2D(i, j);
+    }
+}
+*/
+
+
+
 
 // Lighting
 function setupLights() {
@@ -45,13 +63,6 @@ function setupLights() {
 
     const light1_helper = new THREE.DirectionalLightHelper(light1, 0.1); // Size of the helper
     scene.add(light1_helper);
-
-    const light2 = new THREE.DirectionalLight(0xff0000, 1); // red color, intensity 1
-    light2.position.set(-1, 1, -0.5);
-    scene.add(light2);
-
-    const light2_helper = new THREE.DirectionalLightHelper(light2, 0.1); // Size of the helper
-    scene.add(light2_helper);
 
     const ambient_light = new THREE.AmbientLight();
     ambient_light.intensity = 0.1;
