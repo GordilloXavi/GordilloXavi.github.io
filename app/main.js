@@ -35,21 +35,49 @@ let terrain_width = 100;
 let terrain_height = 100;
 const terrain_geometry = new THREE.PlaneGeometry( terrain_width, terrain_height, terrain_width, terrain_height );
 terrain_geometry.rotateX(Math.PI / 2)
-const terrain_material = new THREE.MeshBasicMaterial( {color: 0xaaffbb, side: THREE.DoubleSide, wireframe: true} );
+
+const params = {
+    scale: 0.04,
+    amplitude: 7
+};
+gui.add(params, 'scale', -1, 1).onChange(updateTerrain);
+gui.add(params, 'amplitude', 0, 10).onChange(updateTerrain);
+
+const noise2D = createNoise2D();
+
+// Function to displace vertices based on Perlin noise
+function displaceVertices(geometry, scale, amplitude) {
+    const vertices = geometry.attributes.position.array;
+
+    for (let i = 0; i < vertices.length; i += 3) {
+        const x = vertices[i];
+        const y = vertices[i + 2];
+        const noiseValue = noise2D(x * scale, y * scale);
+        vertices[i + 1] = noiseValue * amplitude;
+    }
+    geometry.computeVertexNormals();
+    geometry.attributes.position.needsUpdate = true;
+}
+
+function updateTerrain() {
+    displaceVertices(terrain_geometry, params.scale, params.amplitude);
+}
+
+// Initial terrain generation
+updateTerrain();
+
+
+const terrain_material = new THREE.MeshStandardMaterial( {
+    color: 0xaaffbb, 
+    side: THREE.DoubleSide, 
+    wireframe: true
+} );
+gui.add(terrain_material, 'wireframe');
+
 const terrain_mesh = new THREE.Mesh( terrain_geometry, terrain_material );
 scene.add( terrain_mesh );
 
-const noise2D = createNoise2D();
 const terrain_vertices = terrain_geometry.attributes.position.array
-
-/*
-for (let i = 0; i < terrain_height; i++) {
-    for (let j = 0; i < terrain_width; j++) {
-        //console.log();
-        //noise2D(i, j);
-    }
-}
-*/
 
 
 
