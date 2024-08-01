@@ -9,7 +9,7 @@ import * as dat from 'dat.gui';
 const renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.setClearColor(0x1040f0);
+renderer.setClearColor(0x1643f0);
 document.body.appendChild( renderer.domElement );
 
 // Debugging tool
@@ -40,8 +40,8 @@ const terrain_geometry = new THREE.PlaneGeometry( terrain_width, terrain_height,
 terrain_geometry.rotateX(Math.PI / 2)
 
 const params = {
-    scale: 0.04,
-    amplitude: 20
+    scale: 0.007,
+    amplitude: 35
 };
 gui.add(params, 'scale', 0, 0.1).onChange(updateTerrain);
 gui.add(params, 'amplitude', 0, 50).onChange(updateTerrain);
@@ -55,8 +55,15 @@ function displaceVertices(geometry, scale, amplitude) {
     for (let i = 0; i < vertices.length; i += 3) {
         const x = vertices[i];
         const y = vertices[i + 2];
-        const noiseValue = noise2D(x * scale, y * scale);
-        vertices[i + 1] = noiseValue * amplitude;
+        const noise_1 = noise2D(x * scale * 1, y * scale * 1) * (amplitude / 1);
+        const noise_2 = noise2D(x * scale * 2, y * scale * 2) * (amplitude / 2);
+        const noise_3 = noise2D(x * scale * 4, y * scale * 4) * (amplitude / 4);
+        const noise_4 = noise2D(x * scale * 8, y * scale * 8) * (amplitude / 8);
+        const noise_5 = noise2D(x * scale * 128, y * scale * 128) * (amplitude / 64);
+
+
+        const noiseValue = noise_1 + noise_2 + noise_3 + noise_4 + noise_5;
+        vertices[i + 1] = noiseValue;
     }
     geometry.computeVertexNormals();
     geometry.attributes.position.needsUpdate = true;
@@ -71,9 +78,9 @@ updateTerrain();
 
 
 const terrain_material = new THREE.MeshStandardMaterial( {
-    color: 0xaaffbb, 
+    color: 0x556655, 
     side: THREE.DoubleSide, 
-    wireframe: true
+    wireframe: false
 } );
 gui.add(terrain_material, 'wireframe');
 
