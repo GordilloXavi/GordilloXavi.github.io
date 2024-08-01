@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import { FirstPersonControls, Wireframe } from 'three/examples/jsm/Addons.js';
-import { color } from 'three/examples/jsm/nodes/Nodes.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { FirstPersonControls } from 'three/examples/jsm/Addons.js';
+import Stats from 'stats.js';
 import { createNoise2D } from 'simplex-noise';
 import * as dat from 'dat.gui';
 
@@ -23,6 +22,12 @@ camera.lookAt(0, 0, 0);
 
 // Scene
 const scene = new THREE.Scene();
+
+// Initialize stats to show FPS
+const stats = new Stats();
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom);
+
 
 // Add a 3D GridHelper
 //const gridHelper = new THREE.GridHelper(100, 100); // Size of the grid, divisions
@@ -104,14 +109,20 @@ function setupLights() {
     scene.add(ambient_light);
 } 
 
+setupLights();
 
 function animate() {
+    stats.begin();
+
     controls.update( clock.getDelta() );
-	renderer.render( scene, camera );
+    renderer.render(scene, camera);
+
+    stats.end();
+    requestAnimationFrame(animate);
 }
 
-setupLights();
-renderer.setAnimationLoop( animate );
+animate();
+//renderer.setAnimationLoop( animate );
 
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;

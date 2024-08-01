@@ -2,6 +2,7 @@
   "dependencies": {
     "dat.gui": "^0.7.9",
     "simplex-noise": "^4.0.3",
+    "stats.js": "^0.17.0",
     "three": "^0.166.1"
   },
   "devDependencies": {
