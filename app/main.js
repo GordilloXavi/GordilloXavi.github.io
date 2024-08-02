@@ -4,11 +4,16 @@ import Stats from 'stats.js';
 import { createNoise2D } from 'simplex-noise';
 import * as dat from 'dat.gui';
 
+// Canvas
+const canvas = document.querySelector('canvas.webgl')
+
 // Renderer
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({
+    canvas: canvas
+})
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.setClearColor(0x1643f0);
+renderer.setClearColor(0x333333);
 document.body.appendChild( renderer.domElement );
 
 // Debugging tool
@@ -39,8 +44,8 @@ controls.movementSpeed = 150;
 controls.lookSpeed = 0.1;
 
 // Terrain
-let terrain_width = 500;
-let terrain_height = 500;
+let terrain_width = 1500;
+let terrain_height = 1500;
 const terrain_geometry = new THREE.PlaneGeometry( terrain_width, terrain_height, terrain_width, terrain_height );
 terrain_geometry.rotateX(Math.PI / 2)
 
@@ -105,11 +110,12 @@ function setupLights() {
     scene.add(light1_helper);
 
     const ambient_light = new THREE.AmbientLight();
-    ambient_light.intensity = 0.1;
+    ambient_light.intensity = 0.2;
     scene.add(ambient_light);
 } 
 
 setupLights();
+renderer.setPixelRatio(window.devicePixelRatio);
 
 function animate() {
     stats.begin();
@@ -129,4 +135,13 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     controls.handleResize();
+    renderer.setPixelRatio(window.devicePixelRatio);
+});
+
+window.addEventListener('dblclick', () => {
+    if (!document.fullscreenElement) {
+        canvas.requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
 });
